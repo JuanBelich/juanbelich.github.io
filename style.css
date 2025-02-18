@@ -1,0 +1,19 @@
+/* Eliminar márgenes y padding por defecto */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Evita el scroll */
+    height: 100%; /* Asegura que el body ocupe toda la altura */
+}
+
+/* Estilos para el iframe */
+iframe {
+    width: 1000px;
+    height: 1000px;
+    position: absolute; /* Posicionamiento absoluto */
+    top: 0;
+    left: 0;
+    width: 100vw; /* 100% del ancho de la ventana */
+    height: 100vh; /* 100% de la altura de la ventana */
+    border: none; /* Elimina el borde del iframe */
+}
