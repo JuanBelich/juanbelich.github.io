@@ -190,13 +190,13 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.textContent = 'Enviando...';
             submitBtn.disabled = true;
             
-            // Parámetros para EmailJS
+            // Parámetros para EmailJS (nombres estándar)
             const templateParams = {
                 from_name: name,
                 from_email: email,
                 subject: subject,
                 message: message,
-                to_email: 'juanbelich@gmail.com' // Tu email
+                reply_to: email
             };
             
             // Enviar email usando EmailJS
@@ -206,8 +206,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     showNotification('¡Mensaje enviado correctamente! Te contactaré pronto.', 'success');
                     contactForm.reset();
                 }, function(error) {
-                    console.error('Error al enviar email:', error);
-                    showNotification('Error al enviar el mensaje. Inténtalo de nuevo.', 'error');
+                    console.error('Error completo:', error);
+                    console.error('Status:', error.status);
+                    console.error('Text:', error.text);
+                    
+                    let errorMessage = 'Error al enviar el mensaje. ';
+                    if (error.status === 400) {
+                        errorMessage += 'Verifica la configuración de EmailJS.';
+                    } else if (error.status === 401) {
+                        errorMessage += 'Problema de autenticación.';
+                    } else {
+                        errorMessage += 'Inténtalo de nuevo.';
+                    }
+                    
+                    showNotification(errorMessage, 'error');
                 })
                 .finally(function() {
                     // Restaurar botón

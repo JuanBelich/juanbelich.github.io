@@ -40,6 +40,7 @@ Mensaje:
 
 ---
 Este mensaje fue enviado desde tu portfolio web.
+Puedes responder directamente a: {{reply_to}}
 ```
 
 4. En **"Settings"**:
@@ -83,6 +84,21 @@ emailjs.send('service_abc123', 'template_xyz789', templateParams)
 4. Revisa tu Gmail - debería llegar el email
 
 ## 🔧 Solución de Problemas
+
+### Error 400 (Bad Request):
+**Causa más común:** Los nombres de variables en el template no coinciden con el código.
+
+**Solución:**
+1. Ve a tu template en EmailJS
+2. Asegúrate de que uses exactamente estas variables:
+   - `{{from_name}}`
+   - `{{from_email}}`
+   - `{{subject}}`
+   - `{{message}}`
+   - `{{reply_to}}`
+3. En "Settings" del template, configura:
+   - **To Email:** juanbelich@gmail.com (tu email fijo)
+   - **Reply To:** {{reply_to}}
 
 ### Si no llegan los emails:
 1. Revisa la consola del navegador (F12) por errores
