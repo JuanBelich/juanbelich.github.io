@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ===== CONFIGURACIÓN EMAILJS =====
     // Inicializar EmailJS con tu Public Key
-    emailjs.init("giy0rllLAGnynVB-0"); // Reemplazar con tu clave pública
+    emailjs.init("pyQrIILAGnynVB-0"); // Public Key corregida
     
     // ===== FORMULARIO DE CONTACTO CON EMAILJS =====
     const contactForm = document.getElementById('contactForm');
