@@ -155,7 +155,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // ===== FORMULARIO DE CONTACTO =====
+    // ===== CONFIGURACIÓN EMAILJS =====
+    // Inicializar EmailJS con tu Public Key
+    emailjs.init("giy0rllLAGnynVB-0"); // Reemplazar con tu clave pública
+    
+    // ===== FORMULARIO DE CONTACTO CON EMAILJS =====
     const contactForm = document.getElementById('contactForm');
     
     if (contactForm) {
@@ -180,9 +184,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Simular envío del formulario
-            showNotification('¡Mensaje enviado correctamente! Te contactaré pronto.', 'success');
-            contactForm.reset();
+            // Mostrar estado de envío
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Enviando...';
+            submitBtn.disabled = true;
+            
+            // Parámetros para EmailJS
+            const templateParams = {
+                from_name: name,
+                from_email: email,
+                subject: subject,
+                message: message,
+                to_email: 'juanbelich@gmail.com' // Tu email
+            };
+            
+            // Enviar email usando EmailJS
+            emailjs.send('service_selk477', 'template_giv5wpk', templateParams)
+                .then(function(response) {
+                    console.log('Email enviado exitosamente!', response.status, response.text);
+                    showNotification('¡Mensaje enviado correctamente! Te contactaré pronto.', 'success');
+                    contactForm.reset();
+                }, function(error) {
+                    console.error('Error al enviar email:', error);
+                    showNotification('Error al enviar el mensaje. Inténtalo de nuevo.', 'error');
+                })
+                .finally(function() {
+                    // Restaurar botón
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                });
         });
     }
 
