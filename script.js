@@ -1,0 +1,441 @@
+// Esperar a que el DOM esté completamente cargado
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // ===== NAVEGACIÓN MÓVIL =====
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    // Toggle del menú hamburguesa
+    hamburger.addEventListener('click', function() {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+        
+        // Animar las barras del hamburger
+        const bars = hamburger.querySelectorAll('.bar');
+        bars.forEach((bar, index) => {
+            if (hamburger.classList.contains('active')) {
+                if (index === 0) bar.style.transform = 'rotate(-45deg) translate(-5px, 6px)';
+                if (index === 1) bar.style.opacity = '0';
+                if (index === 2) bar.style.transform = 'rotate(45deg) translate(-5px, -6px)';
+            } else {
+                bar.style.transform = 'none';
+                bar.style.opacity = '1';
+            }
+        });
+    });
+
+    // Cerrar menú al hacer click en un enlace
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+            
+            // Resetear hamburger
+            const bars = hamburger.querySelectorAll('.bar');
+            bars.forEach(bar => {
+                bar.style.transform = 'none';
+                bar.style.opacity = '1';
+            });
+        });
+    });
+
+    // ===== NAVEGACIÓN SUAVE Y ACTIVA =====
+    const sections = document.querySelectorAll('section[id]');
+    
+    // Función para actualizar el enlace activo
+    function updateActiveLink() {
+        let current = '';
+        const scrollPosition = window.pageYOffset + 150; // Ajuste para mejor detección
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            const sectionBottom = sectionTop + sectionHeight;
+            
+            if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    // Escuchar el scroll para actualizar enlaces activos
+    window.addEventListener('scroll', updateActiveLink);
+
+    // ===== ANIMACIONES DE SCROLL =====
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in-up');
+                
+                // Animar barras de habilidades
+                if (entry.target.classList.contains('skills')) {
+                    animateSkillBars();
+                }
+                
+                // Animar estadísticas
+                if (entry.target.classList.contains('about')) {
+                    animateStats();
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Observar todas las secciones
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+
+    // ===== ANIMACIÓN DE BARRAS DE HABILIDADES =====
+    function animateSkillBars() {
+        const skillBars = document.querySelectorAll('.skill-progress');
+        
+        skillBars.forEach(bar => {
+            const width = bar.getAttribute('data-width');
+            setTimeout(() => {
+                bar.style.width = width + '%';
+            }, 200);
+        });
+    }
+
+    // ===== ANIMACIÓN DE ESTADÍSTICAS =====
+    function animateStats() {
+        const statNumbers = document.querySelectorAll('.stat-number');
+        
+        statNumbers.forEach(stat => {
+            const finalNumber = parseInt(stat.textContent);
+            let currentNumber = 0;
+            const increment = finalNumber / 50;
+            const timer = setInterval(() => {
+                currentNumber += increment;
+                if (currentNumber >= finalNumber) {
+                    currentNumber = finalNumber;
+                    clearInterval(timer);
+                }
+                stat.textContent = Math.floor(currentNumber) + '+';
+            }, 40);
+        });
+    }
+
+    // ===== EFECTO PARALLAX SUTIL (OPTIMIZADO) =====
+    let ticking = false;
+    
+    function updateParallax() {
+        const scrolled = window.pageYOffset;
+        const hero = document.querySelector('.hero');
+        const heroHeight = hero ? hero.offsetHeight : 0;
+        
+        // Solo aplicar parallax cuando estamos en la sección hero
+        if (hero && scrolled < heroHeight) {
+            const parallaxSpeed = scrolled * 0.3;
+            hero.style.transform = `translateY(${parallaxSpeed}px)`;
+        } else if (hero) {
+            hero.style.transform = 'translateY(0)';
+        }
+        
+        ticking = false;
+    }
+    
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            requestAnimationFrame(updateParallax);
+            ticking = true;
+        }
+    });
+
+    // ===== FORMULARIO DE CONTACTO =====
+    const contactForm = document.getElementById('contactForm');
+    
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Obtener datos del formulario
+            const formData = new FormData(contactForm);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const subject = formData.get('subject');
+            const message = formData.get('message');
+            
+            // Validación básica
+            if (!name || !email || !subject || !message) {
+                showNotification('Por favor, completa todos los campos.', 'error');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                showNotification('Por favor, ingresa un email válido.', 'error');
+                return;
+            }
+            
+            // Simular envío del formulario
+            showNotification('¡Mensaje enviado correctamente! Te contactaré pronto.', 'success');
+            contactForm.reset();
+        });
+    }
+
+    // ===== FUNCIONES AUXILIARES =====
+    
+    // Validar email
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
+    // Mostrar notificaciones
+    function showNotification(message, type) {
+        // Crear elemento de notificación
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        // Estilos de la notificación
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease-in-out;
+            max-width: 300px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        `;
+        
+        // Color según el tipo
+        if (type === 'success') {
+            notification.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+        } else if (type === 'error') {
+            notification.style.background = 'linear-gradient(135deg, #EF4444, #DC2626)';
+        }
+        
+        // Agregar al DOM
+        document.body.appendChild(notification);
+        
+        // Animar entrada
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        // Remover después de 4 segundos
+        setTimeout(() => {
+            notification.style.transform = 'translateX(400px)';
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 4000);
+    }
+
+    // ===== EFECTOS ADICIONALES =====
+    
+    // Efecto de typing en el título principal
+    function typeWriter(element, text, speed = 100) {
+        let i = 0;
+        element.innerHTML = '';
+        
+        function type() {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
+            }
+        }
+        
+        type();
+    }
+
+    // Aplicar efecto typing al cargar la página
+    const heroTitle = document.querySelector('.hero-title');
+    if (heroTitle) {
+        const originalText = heroTitle.textContent;
+        setTimeout(() => {
+            typeWriter(heroTitle, originalText, 80);
+        }, 1000);
+    }
+
+    // ===== SMOOTH SCROLL PARA NAVEGACIÓN =====
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+            
+            if (targetSection) {
+                // Ajuste dinámico del offset según la sección
+                let offset = 80; // Default para navbar
+                if (targetId === '#sobre-mi') {
+                    offset = 60; // Menos offset para "Sobre mí"
+                }
+                
+                const offsetTop = targetSection.offsetTop - offset;
+                
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // ===== CAMBIO DE NAVBAR AL HACER SCROLL (OPTIMIZADO) =====
+    let navbarTicking = false;
+    
+    function updateNavbar() {
+        const navbar = document.querySelector('.navbar');
+        
+        if (window.scrollY > 100) {
+            navbar.style.background = 'rgba(0, 0, 0, 0.98)';
+            navbar.style.backdropFilter = 'blur(15px)';
+            navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.3)';
+        } else {
+            navbar.style.background = 'rgba(0, 0, 0, 0.95)';
+            navbar.style.backdropFilter = 'blur(10px)';
+            navbar.style.boxShadow = 'none';
+        }
+        
+        navbarTicking = false;
+    }
+    
+    window.addEventListener('scroll', function() {
+        updateActiveLink(); // Mantener la función de enlaces activos
+        
+        if (!navbarTicking) {
+            requestAnimationFrame(updateNavbar);
+            navbarTicking = true;
+        }
+    });
+
+    // ===== CURSOR PERSONALIZADO (OPCIONAL) =====
+    const cursor = document.createElement('div');
+    cursor.className = 'custom-cursor';
+    cursor.style.cssText = `
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        background: var(--primary-gold);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 10000;
+        transform: translate(-50%, -50%);
+        transition: transform 0.1s ease;
+        opacity: 0;
+    `;
+    
+    document.body.appendChild(cursor);
+
+    // Seguir el mouse
+    document.addEventListener('mousemove', function(e) {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        cursor.style.opacity = '0.7';
+    });
+
+    // Ocultar cursor cuando sale de la ventana
+    document.addEventListener('mouseleave', function() {
+        cursor.style.opacity = '0';
+    });
+
+    // Efecto hover en elementos interactivos
+    const interactiveElements = document.querySelectorAll('a, button, .project-card, .skill-item');
+    
+    interactiveElements.forEach(element => {
+        element.addEventListener('mouseenter', function() {
+            cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            cursor.style.background = 'var(--secondary-gold)';
+        });
+        
+        element.addEventListener('mouseleave', function() {
+            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            cursor.style.background = 'var(--primary-gold)';
+        });
+    });
+
+    // ===== PRELOADER (OPCIONAL) =====
+    function createPreloader() {
+        const preloader = document.createElement('div');
+        preloader.id = 'preloader';
+        preloader.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--black);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+            transition: opacity 0.5s ease;
+        `;
+        
+        preloader.innerHTML = `
+            <div style="
+                width: 50px;
+                height: 50px;
+                border: 3px solid var(--light-gray);
+                border-top: 3px solid var(--primary-gold);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            "></div>
+        `;
+        
+        // Agregar animación de spin
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        document.body.appendChild(preloader);
+        
+        // Remover preloader cuando la página esté cargada
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(preloader);
+                }, 500);
+            }, 1000);
+        });
+    }
+
+    // Activar preloader
+    createPreloader();
+
+    // ===== LAZY LOADING PARA IMÁGENES (SI SE AGREGAN) =====
+    const images = document.querySelectorAll('img[data-src]');
+    
+    const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.classList.remove('lazy');
+                imageObserver.unobserve(img);
+            }
+        });
+    });
+
+    images.forEach(img => imageObserver.observe(img));
+
+    console.log('🚀 Portafolio cargado correctamente!');
+});
