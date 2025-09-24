@@ -88,7 +88,7 @@ Puedes responder directamente a: {{reply_to}}
 3. **Verificar IDs en línea 212:**
    ```javascript
    // Asegúrate de que estos IDs sean correctos:
-   emailjs.send('service_selk477', 'template_giv5wpk', templateParams)
+   emailjs.send('service_on3v3xs', 'template_giv5wpk', templateParams)
    ```
 
 ### ⚠️ IMPORTANTE: Template Configuration
