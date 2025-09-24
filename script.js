@@ -157,7 +157,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ===== CONFIGURACIÓN EMAILJS =====
     // Inicializar EmailJS con tu Public Key
-    emailjs.init("pyQrIILAGnynVB-0"); // Public Key corregida
+    // IMPORTANTE: Debes reemplazar "TU_PUBLIC_KEY_AQUI" con tu Public Key real de EmailJS
+    // Ve a tu dashboard de EmailJS → Account → General → Public Key
+    emailjs.init("TU_PUBLIC_KEY_AQUI");
     
     // ===== FORMULARIO DE CONTACTO CON EMAILJS =====
     const contactForm = document.getElementById('contactForm');
@@ -190,13 +192,15 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.textContent = 'Enviando...';
             submitBtn.disabled = true;
             
-            // Parámetros para EmailJS (nombres estándar)
+            // Parámetros para EmailJS - DEBEN coincidir con tu template
+            // Basado en la configuración mostrada en la imagen
             const templateParams = {
-                from_name: name,
-                from_email: email,
-                subject: subject,
-                message: message,
-                reply_to: email
+                from_name: name,        // {{from_name}} en el template
+                from_email: email,      // {{from_email}} en el template  
+                subject: subject,       // {{subject}} en el template
+                message: message,       // {{message}} en el template
+                reply_to: email,        // {{reply_to}} en el template
+                to_email: 'jbelich89@gmail.com'  // Email destino fijo
             };
             
             // Debug: Mostrar parámetros que se envían

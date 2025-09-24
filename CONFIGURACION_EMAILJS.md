@@ -1,5 +1,17 @@
 # 📧 Configuración de EmailJS para el Formulario de Contacto
 
+## 🚨 PROBLEMAS IDENTIFICADOS Y SOLUCIÓN
+
+### Error actual: "The Public Key is invalid"
+**Causa:** La Public Key en `script.js` línea 162 está como `"TU_PUBLIC_KEY_AQUI"` (placeholder)
+**Solución:** Reemplazar con tu Public Key real de EmailJS
+
+### Error 404 en recursos
+**Causa:** Configuración incorrecta de EmailJS
+**Solución:** Seguir los pasos exactos a continuación
+
+---
+
 ## Paso 1: Crear cuenta en EmailJS
 
 1. Ve a [https://www.emailjs.com/](https://www.emailjs.com/)
@@ -57,24 +69,39 @@ Puedes responder directamente a: {{reply_to}}
 
 ## Paso 5: Configurar el código
 
-En el archivo `script.js`, reemplaza estas líneas:
+### 🔧 PASOS CRÍTICOS PARA CORREGIR LOS ERRORES:
 
-```javascript
-// Línea 160: Reemplaza TU_PUBLIC_KEY_AQUI
-emailjs.init("abc123def456"); // Tu Public Key real
+1. **Obtener tu Public Key real:**
+   - Ve a tu dashboard de EmailJS
+   - Clic en **"Account"** → **"General"**
+   - Copia tu **Public Key** (algo como: `user_abc123def456`)
 
-// Línea 203: Reemplaza TU_SERVICE_ID y TU_TEMPLATE_ID
-emailjs.send('service_abc123', 'template_xyz789', templateParams)
-```
+2. **En el archivo `script.js`, línea 162:**
+   ```javascript
+   // CAMBIAR ESTO:
+   emailjs.init("TU_PUBLIC_KEY_AQUI");
+   
+   // POR ESTO (con tu Public Key real):
+   emailjs.init("user_abc123def456"); // Tu Public Key real
+   ```
 
-### Ejemplo completo:
-```javascript
-// Configuración EmailJS
-emailjs.init("abc123def456");
+3. **Verificar IDs en línea 212:**
+   ```javascript
+   // Asegúrate de que estos IDs sean correctos:
+   emailjs.send('service_selk477', 'template_giv5wpk', templateParams)
+   ```
 
-// En la función de envío
-emailjs.send('service_abc123', 'template_xyz789', templateParams)
-```
+### ⚠️ IMPORTANTE: Template Configuration
+Tu template en EmailJS DEBE tener exactamente estas variables:
+- `{{from_name}}`
+- `{{from_email}}`
+- `{{subject}}`
+- `{{message}}`
+- `{{reply_to}}`
+
+Y en **Settings** del template:
+- **To Email:** `jbelich89@gmail.com` (fijo)
+- **Reply To:** `{{reply_to}}`
 
 ## Paso 6: Probar el formulario
 
