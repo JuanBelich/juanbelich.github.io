@@ -199,6 +199,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 reply_to: email
             };
             
+            // Debug: Mostrar parámetros que se envían
+            console.log('Enviando con estos parámetros:', templateParams);
+            console.log('Service ID:', 'service_selk477');
+            console.log('Template ID:', 'template_giv5wpk');
+            
             // Enviar email usando EmailJS
             emailjs.send('service_selk477', 'template_giv5wpk', templateParams)
                 .then(function(response) {
