@@ -296,6 +296,16 @@ body {
     justify-content: center;
     font-size: 4rem;
     color: var(--black);
+    overflow: hidden;
+    padding: 5px;
+}
+
+.profile-photo {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
 }
 
 /* Secciones generales */
