@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar EmailJS con tu Public Key
     // IMPORTANTE: Debes reemplazar "TU_PUBLIC_KEY_AQUI" con tu Public Key real de EmailJS
     // Ve a tu dashboard de EmailJS → Account → General → Public Key
-    emailjs.init("TU_PUBLIC_KEY_AQUI");
+    emailjs.init("giy0rllLAGnynVB-0");
     
     // ===== FORMULARIO DE CONTACTO CON EMAILJS =====
     const contactForm = document.getElementById('contactForm');
