@@ -373,50 +373,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // ===== CURSOR PERSONALIZADO (OPCIONAL) =====
-    const cursor = document.createElement('div');
-    cursor.className = 'custom-cursor';
-    cursor.style.cssText = `
-        position: fixed;
-        width: 20px;
-        height: 20px;
-        background: var(--primary-gold);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 10000;
-        transform: translate(-50%, -50%);
-        transition: transform 0.1s ease;
-        opacity: 0;
-    `;
-    
-    document.body.appendChild(cursor);
-
-    // Seguir el mouse
-    document.addEventListener('mousemove', function(e) {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-        cursor.style.opacity = '0.7';
-    });
-
-    // Ocultar cursor cuando sale de la ventana
-    document.addEventListener('mouseleave', function() {
-        cursor.style.opacity = '0';
-    });
-
-    // Efecto hover en elementos interactivos
-    const interactiveElements = document.querySelectorAll('a, button, .project-card, .skill-item');
-    
-    interactiveElements.forEach(element => {
-        element.addEventListener('mouseenter', function() {
-            cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-            cursor.style.background = 'var(--secondary-gold)';
-        });
-        
-        element.addEventListener('mouseleave', function() {
-            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-            cursor.style.background = 'var(--primary-gold)';
-        });
-    });
 
     // ===== PRELOADER (OPCIONAL) =====
     function createPreloader() {
