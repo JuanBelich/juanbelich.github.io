@@ -115,17 +115,31 @@ document.addEventListener('DOMContentLoaded', function() {
         const statNumbers = document.querySelectorAll('.stat-number');
         
         statNumbers.forEach(stat => {
-            const finalNumber = parseInt(stat.textContent);
-            let currentNumber = 0;
-            const increment = finalNumber / 50;
-            const timer = setInterval(() => {
-                currentNumber += increment;
-                if (currentNumber >= finalNumber) {
-                    currentNumber = finalNumber;
-                    clearInterval(timer);
-                }
-                stat.textContent = Math.floor(currentNumber) + '+';
-            }, 40);
+            const originalText = stat.textContent;
+            const finalNumber = parseInt(originalText);
+            
+            // Si es un número válido, animar
+            if (!isNaN(finalNumber)) {
+                let currentNumber = 0;
+                const increment = finalNumber / 50;
+                const timer = setInterval(() => {
+                    currentNumber += increment;
+                    if (currentNumber >= finalNumber) {
+                        currentNumber = finalNumber;
+                        clearInterval(timer);
+                    }
+                    stat.textContent = Math.floor(currentNumber) + '+';
+                }, 40);
+            } else {
+                // Si es texto, solo aplicar una animación de fade-in
+                stat.style.opacity = '0';
+                stat.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    stat.style.transition = 'all 0.6s ease';
+                    stat.style.opacity = '1';
+                    stat.style.transform = 'translateY(0)';
+                }, 200);
+            }
         });
     }
 
